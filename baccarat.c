@@ -1,30 +1,30 @@
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable : 4996 )
 #include <stdio.h>
-#include <windows.h>            // gotoxy, system, sleep È°¿ë
-#include <time.h>               // srand È°¿ë
-#include <conio.h>				 // getch() È°¿ë
+#include <windows.h>            // gotoxy, system, sleep í™œìš©
+#include <time.h>               // srand í™œìš©
+#include <conio.h>				 // getch() í™œìš©
 
 #define ARROW_UP    72
-#define ARROW_DOWN  80     /*¹æÇâ Å°ÀÇ ASCHII ¹İº¹¹® ³»ºÎ¿¡¼­ µÎ¹øÂ° getch¸¦ È°¿ëÇØ ¿·¿¡ ÀÖ´Â °ªÀ» ¹ŞÀ» ¼ö ÀÖ½À´Ï´Ù. */
+#define ARROW_DOWN  80     /*ë°©í–¥ í‚¤ì˜ ASCHII ë°˜ë³µë¬¸ ë‚´ë¶€ì—ì„œ ë‘ë²ˆì§¸ getchë¥¼ í™œìš©í•´ ì˜†ì— ìˆëŠ” ê°’ì„ ë°›ì„ ìˆ˜ ìˆìŠµë‹ˆë‹¤. */
 #define ENTER       13
 
 int chip = 10000;
 
-// CP949 ÀÎÄÚµùÀÇ Æ¯¼ö¹®ÀÚ¸¦ Æ÷ÀÎÅÍ·Î ¼±¾ğ _rowÀÇ ÀÌ¸§À¸·Î ¼±¾ğµÈ º¯¼ö´Â cp949Ç¥ÀÇ ÇàÀÌ°í _colÀº ¿­À» ÀÇ¹ÌÇÔ , µÎ º¯¼ö¸¦ %c%c·Î Ãâ·ÂÇÏ¸é ¿øÇÏ´Â Æ¯¼ö¹®ÀÚ¸¦ Ãâ·ÂÇÒ ¼ö ÀÖ½À´Ï´Ù.
-int spades_row = 0xa2;   // Spades (¢¼)
+// CP949 ì¸ì½”ë”©ì˜ íŠ¹ìˆ˜ë¬¸ìë¥¼ í¬ì¸í„°ë¡œ ì„ ì–¸ _rowì˜ ì´ë¦„ìœ¼ë¡œ ì„ ì–¸ëœ ë³€ìˆ˜ëŠ” cp949í‘œì˜ í–‰ì´ê³  _colì€ ì—´ì„ ì˜ë¯¸í•¨ , ë‘ ë³€ìˆ˜ë¥¼ %c%cë¡œ ì¶œë ¥í•˜ë©´ ì›í•˜ëŠ” íŠ¹ìˆ˜ë¬¸ìë¥¼ ì¶œë ¥í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
+int spades_row = 0xa2;   // Spades (â™ )
 int spades_col = 0xbc;
 
-int hearts_row = 0xa2;  // Hearts (¢¾)
+int hearts_row = 0xa2;  // Hearts (â™¥)
 int hearts_col = 0xbe;
 
 int diamonds_row = 0xa1; // Diamonds 
 int diamonds_col = 0xdf;  
 
-int clubs_row = 0xa2;   // Clubs (¢À)
+int clubs_row = 0xa2;   // Clubs (â™£)
 int clubs_col = 0xc0;    
 
-typedef struct _return_of_Card_Detail_function    /*Card_Detail_functionÀÇ ¹İÈ¯°ªÀ» ÀúÀåÇÏ´Â ±¸Á¶Ã¼ >> ½´Æ®´Â cp949¸¦ °í·ÁÇÏ¿© µÎ°³ÀÇ ÇàÀ¸·Î ¹ŞÀ½*/
+typedef struct _return_of_Card_Detail_function    /*Card_Detail_functionì˜ ë°˜í™˜ê°’ì„ ì €ì¥í•˜ëŠ” êµ¬ì¡°ì²´ >> ìŠˆíŠ¸ëŠ” cp949ë¥¼ ê³ ë ¤í•˜ì—¬ ë‘ê°œì˜ í–‰ìœ¼ë¡œ ë°›ìŒ*/
 {
 	int suit_row;
 
@@ -34,18 +34,18 @@ typedef struct _return_of_Card_Detail_function    /*Card_Detail_functionÀÇ ¹İÈ¯°
 }Details;
 
 
-int row = 0xa2;       /*CP949¸¦ È°¿ëÇØ Æ¯¼ö ¹®ÀÚ¸¦ Ãâ·ÂÇÏ±â À§ÇÑ ÄÚµåÀÔ´Ï´Ù. 16Áø¼ö¸¦ ÀúÀåÇÏ°í hv¸¦ printfÇÏ¸é 2*1ÀÇ ¹Ú½º¸¦ Ãâ·ÂÇÒ ¼ö ÀÖ½À´Ï´Ù.*/
+int row = 0xa2;       /*CP949ë¥¼ í™œìš©í•´ íŠ¹ìˆ˜ ë¬¸ìë¥¼ ì¶œë ¥í•˜ê¸° ìœ„í•œ ì½”ë“œì…ë‹ˆë‹¤. 16ì§„ìˆ˜ë¥¼ ì €ì¥í•˜ê³  hvë¥¼ printfí•˜ë©´ 2*1ì˜ ë°•ìŠ¤ë¥¼ ì¶œë ¥í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.*/
 int col = 0xcc;
 
-void gotoxy(int x, int y);  // GUI ±¸¼ºÀ» À§ÇÑ ÇÔ¼ö 1
+void gotoxy(int x, int y);  // GUI êµ¬ì„±ì„ ìœ„í•œ í•¨ìˆ˜ 1
 void SetColor(int color);
 
-void Draw_Edge();    // GUI ±¸¼ºÀ» À§ÇÑ ÇÔ¼ö 2
-void Draw_Bakara(); //Á¦¸ñ Ãâ·Â
-void Clear(); // ÄÜ¼ÖÈ­¸éÀÇ Å×µÎ¸® (¿§Áö)³»ºÎ °ø°£À» ½ºÆäÀÌ½º¹Ù·Î ¹Ğ¾î³¿ >> ÇØ´ç°ø°£À» gotoxy·Î È°¿ë°¡´ÉÇÔ 
+void Draw_Edge();    // GUI êµ¬ì„±ì„ ìœ„í•œ í•¨ìˆ˜ 2
+void Draw_Bakara(); //ì œëª© ì¶œë ¥
+void Clear(); // ì½˜ì†”í™”ë©´ì˜ í…Œë‘ë¦¬ (ì—£ì§€)ë‚´ë¶€ ê³µê°„ì„ ìŠ¤í˜ì´ìŠ¤ë°”ë¡œ ë°€ì–´ëƒ„ >> í•´ë‹¹ê³µê°„ì„ gotoxyë¡œ í™œìš©ê°€ëŠ¥í•¨ 
 void Draw();
-void Draw_Casino(); // playÇÔ¼ö¿¡¼­ È°¿ëµÊ 
-void Draw_Congratulation(); // ¸ñÇ¥ ´Ş¼º½Ã Ãâ·ÂµÇ´Â ÄÚµåÀÓ
+void Draw_Casino(); // playí•¨ìˆ˜ì—ì„œ í™œìš©ë¨ 
+void Draw_Congratulation(); // ëª©í‘œ ë‹¬ì„±ì‹œ ì¶œë ¥ë˜ëŠ” ì½”ë“œì„
 
 Details Card_Detail_Function(int* row);
 
@@ -112,7 +112,7 @@ void Draw_Edge() {
 }
 
 
-void Draw_Bakara()      /*¾Æ½ºÅ° ¾ÆÆ®*/
+void Draw_Bakara()      /*ì•„ìŠ¤í‚¤ ì•„íŠ¸*/
 {
 	SetColor(13);
 	gotoxy(28, 1);
@@ -138,10 +138,10 @@ void Clear()
 {
 
 
-	for (int j = 1; j <= 28; j++) /*27È¸*/
+	for (int j = 1; j <= 28; j++) /*27íšŒ*/
 	{
 		gotoxy(2, j);
-		for (int i = 2; i <= 116; i++)      /*115È¸*/
+		for (int i = 2; i <= 116; i++)      /*115íšŒ*/
 		{
 			printf(" ");
 		}
@@ -158,7 +158,7 @@ void Draw()
 void Menu()
 {
 	gotoxy(50, 13);
-	printf("º¸À¯ Ä¨ °³¼ö : %d", chip);
+	printf("ë³´ìœ  ì¹© ê°œìˆ˜ : %d", chip);
 	
 	gotoxy(40, 16);
 
@@ -180,7 +180,7 @@ void Menu()
 
 		key = getch();
 
-		// È­»ìÇ¥ Å° Ã³¸®
+		// í™”ì‚´í‘œ í‚¤ ì²˜ë¦¬
 		if (key == 224)
 		{
 			key = getch();
@@ -198,39 +198,39 @@ void Menu()
 		}
 		else if (key == ENTER)
 		{
-			// ¿£ÅÍ Å°¸¦ ´©¸£¸é ¼±ÅÃµÈ ¿É¼ÇÀ» ½ÇÇà
+			// ì—”í„° í‚¤ë¥¼ ëˆ„ë¥´ë©´ ì„ íƒëœ ì˜µì…˜ì„ ì‹¤í–‰
 			Clear();
 			if (option == 1)
 			{
-				Rule(); /*RULEÀ» ¼±ÅÃÇßÀ»‹š*/
+				Rule(); /*RULEì„ ì„ íƒí–ˆì„Â‹Âš*/
 				break;
 			}
 			else if (option == 2)
 			{
-				Play(); /*PLAY ¸¦ ¼±ÅÃÇßÀ»‹š*/
+				Play(); /*PLAY ë¥¼ ì„ íƒí–ˆì„Â‹Âš*/
 				break;
 			}
 			else
 			{
-				Exit();/*EXITÀ» ¼±ÅÃÇßÀ»¶§*/
+				Exit();/*EXITì„ ì„ íƒí–ˆì„ë•Œ*/
 				break;
 			}
 		}
 	}
 }
 
-void Rule_Print1()        /*¼¼ºÎ·êÀ» È®ÀÎ ÇÒ ¼ö ÀÖ´Â ÄÚµå*/
+void Rule_Print1()        /*ì„¸ë¶€ë£°ì„ í™•ì¸ í•  ìˆ˜ ìˆëŠ” ì½”ë“œ*/
 {
 	gotoxy(20, 6);
 	SetColor(9);
-	printf("°ÔÀÓ ¸ñÇ¥");
+	printf("ê²Œì„ ëª©í‘œ");
 	SetColor(15);
 	gotoxy(20, 18);
-	printf("ÇÃ·¹ÀÌ¾î¿Í ¹ğÄ¿ Áß ¾î´À ÂÊÀÌ 9¿¡ °¡±î¿î Á¡¼ö¸¦ ¾ò´ÂÁö¸¦ ¿¹ÃøÇÏ¿© º£ÆÃÇÕ´Ï´Ù. ");
+	printf("í”Œë ˆì´ì–´ì™€ ë±…ì»¤ ì¤‘ ì–´ëŠ ìª½ì´ 9ì— ê°€ê¹Œìš´ ì ìˆ˜ë¥¼ ì–»ëŠ”ì§€ë¥¼ ì˜ˆì¸¡í•˜ì—¬ ë² íŒ…í•©ë‹ˆë‹¤. ");
 	gotoxy(20, 20);
-	printf("À¯Àú´Â ÇÃ·¹ÀÌ¾î ½Â, ¹ğÄ¿ ½Â, µ¿·üÀ¸·Î 3°¡Áö ¼±ÅÃÁö Áß ÇÏ³ª¿¡ º£ÆÃÇÒ ¼ö ÀÖ½À´Ï´Ù. ");
+	printf("ìœ ì €ëŠ” í”Œë ˆì´ì–´ ìŠ¹, ë±…ì»¤ ìŠ¹, ë™ë¥ ìœ¼ë¡œ 3ê°€ì§€ ì„ íƒì§€ ì¤‘ í•˜ë‚˜ì— ë² íŒ…í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤. ");
 	gotoxy(20, 22);
-	printf("À¯Àú´Â º£ÆÃÇÑ ¼±ÅÃÁö¿¡ µû¶ó Â÷µîÇÑ ¹è´ç±İÀ» °¡Á®°¥ ¼ö ÀÖ½À´Ï´Ù. ");
+	printf("ìœ ì €ëŠ” ë² íŒ…í•œ ì„ íƒì§€ì— ë”°ë¼ ì°¨ë“±í•œ ë°°ë‹¹ê¸ˆì„ ê°€ì ¸ê°ˆ ìˆ˜ ìˆìŠµë‹ˆë‹¤. ");
 
 	gotoxy(20, 24);
 	printf("Press any key to return to the menu...");
@@ -244,14 +244,14 @@ void Rule_Print2()
 {
 	gotoxy(20, 6);
 	SetColor(9);
-	printf("Ä«µå °¡Ä¡");
+	printf("ì¹´ë“œ ê°€ì¹˜");
 	SetColor(15);
 	gotoxy(20, 18);
-	printf("¼ıÀÚ Ä«µå (2-9): Ä«µå¿¡ ÀûÈù ¼ıÀÚ °ªÀÌ Á¡¼öÀÔ´Ï´Ù.");
+	printf("ìˆ«ì ì¹´ë“œ (2-9): ì¹´ë“œì— ì íŒ ìˆ«ì ê°’ì´ ì ìˆ˜ì…ë‹ˆë‹¤.");
 	gotoxy(20, 20);
-	printf("10, J, Q, K: 10À¸·Î °£ÁÖµË´Ï´Ù. ");
+	printf("10, J, Q, K: 10ìœ¼ë¡œ ê°„ì£¼ë©ë‹ˆë‹¤. ");
 	gotoxy(20, 22);
-	printf("A (¿¡ÀÌ½º): 1·Î °£ÁÖµË´Ï´Ù.");
+	printf("A (ì—ì´ìŠ¤): 1ë¡œ ê°„ì£¼ë©ë‹ˆë‹¤.");
 
 	gotoxy(20, 24);
 	printf("Press any key to return to the menu...");
@@ -265,12 +265,12 @@ void Rule_Print3()
 {
 	gotoxy(20, 6);
 	SetColor(9);
-	printf("Á¡¼ö °è»ê");
+	printf("ì ìˆ˜ ê³„ì‚°");
 	SetColor(15);
 	gotoxy(20, 18);
-	printf("°¢ Ä«µåÀÇ Á¡¼ö¸¦ ÇÕ»êÇÑ ÈÄ, 10ÀÇ ÀÚ¸®´Â ¹ö¸®°í ÀÏÀÇ ÀÚ¸®¸¸ Á¡¼ö·Î »ç¿ëÇÕ´Ï´Ù.");
+	printf("ê° ì¹´ë“œì˜ ì ìˆ˜ë¥¼ í•©ì‚°í•œ í›„, 10ì˜ ìë¦¬ëŠ” ë²„ë¦¬ê³  ì¼ì˜ ìë¦¬ë§Œ ì ìˆ˜ë¡œ ì‚¬ìš©í•©ë‹ˆë‹¤.");
 	gotoxy(20, 20);
-	printf("¿¹: Ä«µå 7°ú 8ÀÇ ÇÕ°è´Â 15, Á¡¼ö´Â 5ÀÔ´Ï´Ù.");
+	printf("ì˜ˆ: ì¹´ë“œ 7ê³¼ 8ì˜ í•©ê³„ëŠ” 15, ì ìˆ˜ëŠ” 5ì…ë‹ˆë‹¤.");
 
 	gotoxy(20, 24);
 	printf("Press any key to return to the menu...");
@@ -284,20 +284,20 @@ void Rule_Print4()
 {
 	gotoxy(20, 6);
 	SetColor(9);
-	printf("°ÔÀÓ ÁøÇà");
+	printf("ê²Œì„ ì§„í–‰");
 	SetColor(15);
 	gotoxy(20, 10);
-	printf("1. º£ÆÃ: ÇÃ·¹ÀÌ¾î´Â 'ÇÃ·¹ÀÌ¾î', '¹ğÄ¿', ¶Ç´Â 'Å¸ÀÌ(¹«½ÂºÎ)' Áß ÇÏ³ª¿¡ º£ÆÃÇÕ´Ï´Ù.");
+	printf("1. ë² íŒ…: í”Œë ˆì´ì–´ëŠ” 'í”Œë ˆì´ì–´', 'ë±…ì»¤', ë˜ëŠ” 'íƒ€ì´(ë¬´ìŠ¹ë¶€)' ì¤‘ í•˜ë‚˜ì— ë² íŒ…í•©ë‹ˆë‹¤.");
 	gotoxy(20, 12);
-	printf("2. Ä«µå ºĞ¹è: ÇÃ·¹ÀÌ¾î¿Í ¹ğÄ¿¿¡°Ô °¢°¢ µÎ ÀåÀÇ Ä«µå°¡ ºĞ¹èµË´Ï´Ù.");
+	printf("2. ì¹´ë“œ ë¶„ë°°: í”Œë ˆì´ì–´ì™€ ë±…ì»¤ì—ê²Œ ê°ê° ë‘ ì¥ì˜ ì¹´ë“œê°€ ë¶„ë°°ë©ë‹ˆë‹¤.");
 	gotoxy(20, 14);
-	printf("3. ÇÃ·¹ÀÌ¾îÀÇ Ãß°¡ Ä«µå ±ÔÄ¢: ÇÃ·¹ÀÌ¾îÀÇ µÎ ÀåÀÇ Ä«µå Á¡¼ö°¡ 0~5ÀÏ °æ¿ì, Ãß°¡ Ä«µå¸¦ ¹Ş½À´Ï´Ù.");
+	printf("3. í”Œë ˆì´ì–´ì˜ ì¶”ê°€ ì¹´ë“œ ê·œì¹™: í”Œë ˆì´ì–´ì˜ ë‘ ì¥ì˜ ì¹´ë“œ ì ìˆ˜ê°€ 0~5ì¼ ê²½ìš°, ì¶”ê°€ ì¹´ë“œë¥¼ ë°›ìŠµë‹ˆë‹¤.");
 	gotoxy(20, 16);
-	printf("3-1. 6 ¶Ç´Â 7ÀÏ °æ¿ì, Ãß°¡ Ä«µå¸¦ ¹ŞÁö ¾Ê½À´Ï´Ù.");
+	printf("3-1. 6 ë˜ëŠ” 7ì¼ ê²½ìš°, ì¶”ê°€ ì¹´ë“œë¥¼ ë°›ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 	gotoxy(20, 18);
-	printf("4. ¹ğÄ¿ÀÇ Ãß°¡ Ä«µå ±ÔÄ¢: ¹ğÄ¿ÀÇ Ãß°¡ Ä«µå ±ÔÄ¢Àº ÇÃ·¹ÀÌ¾îÀÇ Ãß°¡ Ä«µå ±ÔÄ¢¿¡ µû¶ó ´Ş¶óÁı´Ï´Ù. ");
+	printf("4. ë±…ì»¤ì˜ ì¶”ê°€ ì¹´ë“œ ê·œì¹™: ë±…ì»¤ì˜ ì¶”ê°€ ì¹´ë“œ ê·œì¹™ì€ í”Œë ˆì´ì–´ì˜ ì¶”ê°€ ì¹´ë“œ ê·œì¹™ì— ë”°ë¼ ë‹¬ë¼ì§‘ë‹ˆë‹¤. ");
 	gotoxy(20, 20);
-	printf("4-1. Æ¯Á¤ Á¶°Ç¿¡ µû¶ó Ãß°¡ Ä«µå¸¦ ¹ŞÀ» ¼ö ÀÖ½À´Ï´Ù.");
+	printf("4-1. íŠ¹ì • ì¡°ê±´ì— ë”°ë¼ ì¶”ê°€ ì¹´ë“œë¥¼ ë°›ì„ ìˆ˜ ìˆìŠµë‹ˆë‹¤.");
 
 
 	gotoxy(20, 26);
@@ -314,12 +314,12 @@ void Rule_Print5()
 {
 	gotoxy(20, 6);
 	SetColor(9);
-	printf("½ÂÆĞ °áÁ¤");
+	printf("ìŠ¹íŒ¨ ê²°ì •");
 	SetColor(15);
 	gotoxy(20, 18);
-	printf("½Â¸®: ÇÃ·¹ÀÌ¾î ¶Ç´Â ¹ğÄ¿ Áß Á¡¼ö°¡ 9¿¡ °¡Àå °¡±î¿î ÂÊÀÌ ½Â¸®ÇÕ´Ï´Ù.");
+	printf("ìŠ¹ë¦¬: í”Œë ˆì´ì–´ ë˜ëŠ” ë±…ì»¤ ì¤‘ ì ìˆ˜ê°€ 9ì— ê°€ì¥ ê°€ê¹Œìš´ ìª½ì´ ìŠ¹ë¦¬í•©ë‹ˆë‹¤.");
 	gotoxy(20, 20);
-	printf("Å¸ÀÌ: ÇÃ·¹ÀÌ¾î¿Í ¹ğÄ¿ÀÇ Á¡¼ö°¡ °°À¸¸é ¹«½ÂºÎ·Î, Å¸ÀÌ º£ÆÃÀ» ÇÑ »ç¶÷ÀÌ ½Â¸®ÇÕ´Ï´Ù.");
+	printf("íƒ€ì´: í”Œë ˆì´ì–´ì™€ ë±…ì»¤ì˜ ì ìˆ˜ê°€ ê°™ìœ¼ë©´ ë¬´ìŠ¹ë¶€ë¡œ, íƒ€ì´ ë² íŒ…ì„ í•œ ì‚¬ëŒì´ ìŠ¹ë¦¬í•©ë‹ˆë‹¤.");
 
 	gotoxy(20, 24);
 	printf("Press any key to return to the menu...");
@@ -333,14 +333,14 @@ void Rule_Print6()
 {
 	gotoxy(20, 6);
 	SetColor(9);
-	printf("¹è´ç±İ");
+	printf("ë°°ë‹¹ê¸ˆ");
 	SetColor(15);
 	gotoxy(20, 18);
-	printf("ÇÃ·¹ÀÌ¾î º£ÆÃ: ½Â¸® ½Ã 1:1ÀÇ ¹è´ç±İ.");
+	printf("í”Œë ˆì´ì–´ ë² íŒ…: ìŠ¹ë¦¬ ì‹œ 1:1ì˜ ë°°ë‹¹ê¸ˆ.");
 	gotoxy(20, 20);
-	printf("¹ğÄ¿ º£ÆÃ: ½Â¸® ½Ã 1:1ÀÇ ¹è´ç±İ, ´Ü 5%%ÀÇ ¼ö¼ö·á°¡ ºÙ½À´Ï´Ù.");
+	printf("ë±…ì»¤ ë² íŒ…: ìŠ¹ë¦¬ ì‹œ 1:1ì˜ ë°°ë‹¹ê¸ˆ, ë‹¨ 5%%ì˜ ìˆ˜ìˆ˜ë£Œê°€ ë¶™ìŠµë‹ˆë‹¤.");
 	gotoxy(20, 22);
-	printf("Å¸ÀÌ º£ÆÃ: ÀÏ¹İÀûÀ¸·Î 8:1 ¶Ç´Â 9:1ÀÇ ¹è´ç±İ.");
+	printf("íƒ€ì´ ë² íŒ…: ì¼ë°˜ì ìœ¼ë¡œ 8:1 ë˜ëŠ” 9:1ì˜ ë°°ë‹¹ê¸ˆ.");
 
 	gotoxy(20, 24);
 	printf("Press any key to return to the menu...");
@@ -350,7 +350,7 @@ void Rule_Print6()
 	Draw_Bakara();
 }
 
-void Rule()   /*¸Ş´ºÀÇ Ã¹¹øÂ° ¿É¼ÇÀ» ½ÇÇàÇÔ >> RULE*/
+void Rule()   /*ë©”ë‰´ì˜ ì²«ë²ˆì§¸ ì˜µì…˜ì„ ì‹¤í–‰í•¨ >> RULE*/
 {
 	SetColor(9);
 	gotoxy(40, 8);
@@ -363,17 +363,17 @@ void Rule()   /*¸Ş´ºÀÇ Ã¹¹øÂ° ¿É¼ÇÀ» ½ÇÇàÇÔ >> RULE*/
 	while (1)
 	{
 		gotoxy(40, 12);
-		printf(rule_option == 1 ? "-> °ÔÀÓ ¸ñÇ¥" : "   °ÔÀÓ ¸ñÇ¥");
+		printf(rule_option == 1 ? "-> ê²Œì„ ëª©í‘œ" : "   ê²Œì„ ëª©í‘œ");
 		gotoxy(40, 14);
-		printf(rule_option == 2 ? "-> Ä«µå °¡Ä¡" : "   Ä«µå °¡Ä¡");
+		printf(rule_option == 2 ? "-> ì¹´ë“œ ê°€ì¹˜" : "   ì¹´ë“œ ê°€ì¹˜");
 		gotoxy(40, 16);
-		printf(rule_option == 3 ? "-> Á¡¼ö °è»ê" : "   Á¡¼ö °è»ê");
+		printf(rule_option == 3 ? "-> ì ìˆ˜ ê³„ì‚°" : "   ì ìˆ˜ ê³„ì‚°");
 		gotoxy(40, 18);
-		printf(rule_option == 4 ? "-> °ÔÀÓ ÁøÇà" : "   °ÔÀÓ ÁøÇà");
+		printf(rule_option == 4 ? "-> ê²Œì„ ì§„í–‰" : "   ê²Œì„ ì§„í–‰");
 		gotoxy(40, 20);
-		printf(rule_option == 5 ? "-> ½ÂÆĞ °áÁ¤" : "   ½ÂÆĞ °áÁ¤");
+		printf(rule_option == 5 ? "-> ìŠ¹íŒ¨ ê²°ì •" : "   ìŠ¹íŒ¨ ê²°ì •");
 		gotoxy(40, 22);
-		printf(rule_option == 6 ? "-> ¹è´ç±İ" : "   ¹è´ç±İ");
+		printf(rule_option == 6 ? "-> ë°°ë‹¹ê¸ˆ" : "   ë°°ë‹¹ê¸ˆ");
 
 		rule_key = getch();
 
@@ -438,7 +438,7 @@ void Exit()
 
 void Draw_Casino()
 {
-	for (int i = 0; i < 58; i++)                /*1/3ÁöÁ¡¿¡ ¼öÆò¼± Ãâ·Â*/
+	for (int i = 0; i < 58; i++)                /*1/3ì§€ì ì— ìˆ˜í‰ì„  ì¶œë ¥*/
 	{
 		gotoxy(2 + i * 2, 11);
 		printf("%c%c", row, col);
@@ -447,35 +447,35 @@ void Draw_Casino()
 	for (int i = 0; i < 12; i++)
 	{
 		gotoxy(59, 12 + i);
-		printf("%c%c", row, col);                    /*¼öÁ÷ ºĞÇÒ ¼± y = 24±îÁö Ãâ·Â */
+		printf("%c%c", row, col);                    /*ìˆ˜ì§ ë¶„í•  ì„  y = 24ê¹Œì§€ ì¶œë ¥ */
 	}
 
-	for (int i = 0; i < 58; i++)                /* Y = 24 ÁöÁ¡¿¡ ¼öÆò¼± Ãâ·Â*/
+	for (int i = 0; i < 58; i++)                /* Y = 24 ì§€ì ì— ìˆ˜í‰ì„  ì¶œë ¥*/
 	{
 		gotoxy(2 + i * 2, 24);
 		printf("%c%c", row, col);
 	}
 
-	for (int i = 0; i < 6; i++)                        		/*Ä«µå Æ² »Ì±â */
+	for (int i = 0; i < 6; i++)                        		/*ì¹´ë“œ í‹€ ë½‘ê¸° */
 	{
 		gotoxy(10 + 18 * i, 15);
-		printf("¦®¦¬¦¬¦¬¦¬¦¬¦¬¦¯ ");                /* 8*7ÀÇ Ä«µå Æ² Ä«µåÆ² ¸¶´Ù 10Ä­¾¿ ¶ê */
+		printf("â”â”â”â”â”â”â”â”“ ");                /* 8*7ì˜ ì¹´ë“œ í‹€ ì¹´ë“œí‹€ ë§ˆë‹¤ 10ì¹¸ì”© ë” */
 		gotoxy(10 + 18 * i, 16);
-		printf("¦­?     ¦­ ");
+		printf("â”ƒ?     â”ƒ ");
 		gotoxy(10 + 18 * i, 17);
-		printf("¦­      ¦­ ");
+		printf("â”ƒ      â”ƒ ");
 		gotoxy(10 + 18 * i, 18);
-		printf("¦­  ?   ¦­ ");                      /*Ä«µå°¡ µÚÁıÈ÷´Â ¸ğ¼ÇÀ» ±¸ÇöÇÏ±âÀ§ÇØ ¹°À½Ç¥¸¦ ¸ÕÀú Ãâ·ÂÇÔ */
+		printf("â”ƒ  ?   â”ƒ ");                      /*ì¹´ë“œê°€ ë’¤ì§‘íˆëŠ” ëª¨ì…˜ì„ êµ¬í˜„í•˜ê¸°ìœ„í•´ ë¬¼ìŒí‘œë¥¼ ë¨¼ì € ì¶œë ¥í•¨ */
 		gotoxy(10 + 18 * i, 19);
-		printf("¦­      ¦­ ");
+		printf("â”ƒ      â”ƒ ");
 		gotoxy(10 + 18 * i, 20);
-		printf("¦­     ?¦­ ");
+		printf("â”ƒ     ?â”ƒ ");
 		gotoxy(10 + 18 * i, 21);
-		printf("¦±¦¬¦¬¦¬¦¬¦¬¦¬¦° ");
+		printf("â”—â”â”â”â”â”â”â”› ");
 
 	}
 
-	SetColor(11);                        /*Ä«µå Æ² ¾Æ·¡ Ä«µåÀÇ ¼ø¼­¸¦ ¾Ë·ÁÁÜ*/
+	SetColor(11);                        /*ì¹´ë“œ í‹€ ì•„ë˜ ì¹´ë“œì˜ ìˆœì„œë¥¼ ì•Œë ¤ì¤Œ*/
 	gotoxy(10, 23);
 	printf("First Card");
 	gotoxy(28, 23);
@@ -490,14 +490,14 @@ void Draw_Casino()
 	gotoxy(100, 23);
 	printf("Third Card");
 
-	SetColor(6);						/*ÇÚµå¸¦ ±¸ºĞÇÔ(ÁÂÃø = player & ¿ìÃø = banker) */
+	SetColor(6);						/*í•¸ë“œë¥¼ êµ¬ë¶„í•¨(ì¢Œì¸¡ = player & ìš°ì¸¡ = banker) */
 	gotoxy(23, 13);
 	printf("PLAYER'S HAND");
 	gotoxy(83, 13);
 	printf("BANKER'S HAND");
 	SetColor(15);
 
-	for (int i = 0; i < 58; i++)                /* Y = 9 ÁöÁ¡¿¡ ¼öÆò¼±À» ±×¸²*/
+	for (int i = 0; i < 58; i++)                /* Y = 9 ì§€ì ì— ìˆ˜í‰ì„ ì„ ê·¸ë¦¼*/
 	{
 		gotoxy(2 + i * 2,9);
 		printf("%c%c", row, col);
@@ -505,13 +505,13 @@ void Draw_Casino()
 
 	SetColor(7);
 	gotoxy(4, 10);
-	printf("CHIP: %d ", chip);              /* ÇöÀç °¡Áö°í ÀÖ´Â Ä¨ÀÇ °³¼ö¸¦ ÀÔ·ÂÇÔ(2¹øÂ° ¹Ú½º)*/
+	printf("CHIP: %d ", chip);              /* í˜„ì¬ ê°€ì§€ê³  ìˆëŠ” ì¹©ì˜ ê°œìˆ˜ë¥¼ ì…ë ¥í•¨(2ë²ˆì§¸ ë°•ìŠ¤)*/
 	SetColor(15);
 }
 
 Details Card_Detail_Function(int* row)
 {
-	Details result;                     /* row[0]°ªÀ» ¹ÙÅÁÀ¸·Î Ä«µåÀÇ ½´Æ® °ªÀ» ¹İÈ¯ÇÔ*/
+	Details result;                     /* row[0]ê°’ì„ ë°”íƒ•ìœ¼ë¡œ ì¹´ë“œì˜ ìŠˆíŠ¸ ê°’ì„ ë°˜í™˜í•¨*/
 
 	switch (row[0]) {
 	case 0:
@@ -532,7 +532,7 @@ Details Card_Detail_Function(int* row)
 		break;
 	}
 
-											// row[1]À» ¹ÙÅÁÀ¸·Î Ä«µåÀÇ ¹ë·ù¸¦ ¹è´çÇÔ
+											// row[1]ì„ ë°”íƒ•ìœ¼ë¡œ ì¹´ë“œì˜ ë°¸ë¥˜ë¥¼ ë°°ë‹¹í•¨
 	switch (row[1]) {
 	case 0:
 		result.value = 'A';
@@ -562,7 +562,7 @@ Details Card_Detail_Function(int* row)
 		result.value = '9';
 		break;
 	case 9:
-		result.value = 'T';						// 10Àº T·Î Ç¥½Ã
+		result.value = 'T';						// 10ì€ Të¡œ í‘œì‹œ
 		break;
 	case 10:
 		result.value = 'J';
@@ -578,7 +578,7 @@ Details Card_Detail_Function(int* row)
 	return result;
 }
 
-void Draw_Congratulation() /*»ç¿ëÀÚ°¡ 10¹è ÀÌ»óÀÇ Ä¨À» È¹µæÇÏ¸é Ãâ·ÂµÇ´Â ¾Æ½ºÅ°¾ÆÆ®*/
+void Draw_Congratulation() /*ì‚¬ìš©ìê°€ 10ë°° ì´ìƒì˜ ì¹©ì„ íšë“í•˜ë©´ ì¶œë ¥ë˜ëŠ” ì•„ìŠ¤í‚¤ì•„íŠ¸*/
 {
 	SetColor(13);
 	gotoxy(14, 4);
@@ -602,24 +602,24 @@ void Play()
 
 	int  bet;
 	int banker_point = 0, player_point = 0;
-	int duplicate;									 /*Áßº¹ ¿©ºÎ¸¦ Ç¥ÇöÇÏ´Â º¯¼öÀÌ´Ù*/
+	int duplicate;									 /*ì¤‘ë³µ ì—¬ë¶€ë¥¼ í‘œí˜„í•˜ëŠ” ë³€ìˆ˜ì´ë‹¤*/
 
 	int* card_num = malloc(sizeof(int) * 6);
-	int* player_hand_ptr[3];						/*Æ÷ÀÎÅÍ ¹è¿­ÀÓÀ» À¯ÀÇÇÒ °Í*/
+	int* player_hand_ptr[3];						/*í¬ì¸í„° ë°°ì—´ì„ì„ ìœ ì˜í•  ê²ƒ*/
 	int* banker_hand_ptr[3];
 
-	int** card_info_13;								 /*ÀÌÁß Æ÷ÀÎÅÍÀÇ µµÀÔ>>> ÀÌÂ÷¿ø ¹è¿­À» mallocÇÔ  */
+	int** card_info_13;								 /*ì´ì¤‘ í¬ì¸í„°ì˜ ë„ì…>>> ì´ì°¨ì› ë°°ì—´ì„ mallocí•¨  */
 
 	int betting_option = 1;
 	int play_key;
 
 	gotoxy(40, 13);
 	SetColor(9);
-	printf("%c%c %c%c to move , press Enter key to select", 0xa1, 0xe8, 0xa1, 0xe9);   /*cp949¸¦ È°¿ëÇÑ Æ¯¼ö¹®ÀÚ Ãâ·Â*/
+	printf("%c%c %c%c to move , press Enter key to select", 0xa1, 0xe8, 0xa1, 0xe9);   /*cp949ë¥¼ í™œìš©í•œ íŠ¹ìˆ˜ë¬¸ì ì¶œë ¥*/
 	SetColor(15);
 
 	gotoxy(40, 17);
-	printf("º£ÆÃ ¿É¼ÇÀ» ¼±ÅÃÇÏ½Ã¿À.");
+	printf("ë² íŒ… ì˜µì…˜ì„ ì„ íƒí•˜ì‹œì˜¤.");
 
 	while (1)
 	{
@@ -659,10 +659,10 @@ void Play()
 			Draw_Bakara();
 
 			gotoxy(40, 18);
-			printf("ÇöÀç º¸À¯ Ä¨ °³¼ö : %d", chip);
+			printf("í˜„ì¬ ë³´ìœ  ì¹© ê°œìˆ˜ : %d", chip);
 			
 			gotoxy(40, 16);
-			printf("¹èÆÃÇÒ ±İ¾×À» ÀÔ·ÂÇÏ½Ã¿À.");
+			printf("ë°°íŒ…í•  ê¸ˆì•¡ì„ ì…ë ¥í•˜ì‹œì˜¤.");
 			scanf("%d", &bet);
 
 			if (bet > 0 && bet <= chip)
@@ -674,18 +674,18 @@ void Play()
 			{
 				SetColor(8);
 				gotoxy(53, 18);
-				printf("Á¤È®ÇÑ ¼ıÀÚ¸¦ ´Ù½Ã ÀÔ·ÂÇÏ½Ã¿À");
+				printf("ì •í™•í•œ ìˆ«ìë¥¼ ë‹¤ì‹œ ì…ë ¥í•˜ì‹œì˜¤");
 				SetColor(15);
 				gotoxy(53, 20);
 				system("pause");
 				Clear();
 				gotoxy(40, 16);
-				printf("¹èÆÃÇÒ ±İ¾×À» ÀÔ·ÂÇÏ½Ã¿À.");
+				printf("ë°°íŒ…í•  ê¸ˆì•¡ì„ ì…ë ¥í•˜ì‹œì˜¤.");
 				scanf("%d", &bet);
 			}
 		}
 
-	}														 /*º£ÆÃ ¿É¼Ç°ú º£ÆÃ ±İ¾×À» ¹Ş¾Æ¿È */
+	}														 /*ë² íŒ… ì˜µì…˜ê³¼ ë² íŒ… ê¸ˆì•¡ì„ ë°›ì•„ì˜´ */
 
 	chip -= bet;
 
@@ -706,13 +706,13 @@ void Play()
 		printf("Betting option: TIED   Wagered: %d", bet);
 		break;
 	}
-	Sleep(3000);                       /*3ÃÊ ±â´Ù¸®±â*/
+	Sleep(3000);                       /*3ì´ˆ ê¸°ë‹¤ë¦¬ê¸°*/
 
 	for (int i = 0; i < 6; i++)
 	{
 		do
 		{
-			card_num[i] = rand() % 52; // 0ºÎÅÍ 51±îÁöÀÇ ¹«ÀÛÀ§ ¼ıÀÚ
+			card_num[i] = rand() % 52; // 0ë¶€í„° 51ê¹Œì§€ì˜ ë¬´ì‘ìœ„ ìˆ«ì
 
 			duplicate = 0;
 			for (int j = 0; j < i; j++)
@@ -723,7 +723,7 @@ void Play()
 					break;
 				}
 			}
-		} while (duplicate); /*Ä«µå ³Ñ¹ö°¡ Áßº¹µÇ¸é µàÇÃ¸®ÄÉÀÌÆ®¸¦ 1·Î ÃÊ±âÈ­ÇÔ >> µàÇÃ¸®ÄÉÀÌÆ®°¡ 1ÀÏ‹š ¹İº¹¹®À» ÅëÇØ »õ·Î¿î Ä«µå ³Ñ¹ö·Î ÃÊ±âÈ­ÇÔ*/
+		} while (duplicate); /*ì¹´ë“œ ë„˜ë²„ê°€ ì¤‘ë³µë˜ë©´ ë“€í”Œë¦¬ì¼€ì´íŠ¸ë¥¼ 1ë¡œ ì´ˆê¸°í™”í•¨ >> ë“€í”Œë¦¬ì¼€ì´íŠ¸ê°€ 1ì¼Â‹Âš ë°˜ë³µë¬¸ì„ í†µí•´ ìƒˆë¡œìš´ ì¹´ë“œ ë„˜ë²„ë¡œ ì´ˆê¸°í™”í•¨*/
 	}
 
 
@@ -734,15 +734,15 @@ void Play()
 		card_info_13[i] = (int*)malloc(2 * sizeof(int));
 	}
 
-	/*ÀÌÂ÷¿ø ¹è¿­À» ÀÌ¿ëÇØ Ä«µå ³Ñ¹ö¸¦ 13Áø¼ö²Ã·Î Ç¥ÇöÇÔ */
+	/*ì´ì°¨ì› ë°°ì—´ì„ ì´ìš©í•´ ì¹´ë“œ ë„˜ë²„ë¥¼ 13ì§„ìˆ˜ê¼´ë¡œ í‘œí˜„í•¨ */
 
-	for (int i = 0; i < 6; i++)                        /* ÀÌÁß ¹è¿­À» ÀüºÎ ÃÊ±âÈ­ÇÔ*/
+	for (int i = 0; i < 6; i++)                        /* ì´ì¤‘ ë°°ì—´ì„ ì „ë¶€ ì´ˆê¸°í™”í•¨*/
 	{
-		card_info_13[i][1] = card_num[i] % 13;				/* 1>>> ³ª¸ÓÁö >>> ÀÌ°Ô Ä«µåÀÇ ¹ë·ù¸¦ ÀúÀåÇÔ */
-		card_info_13[i][0] = card_num[i] / 13;            /* 0>>> Á¤¼ö ³ª´©±â >>>ÀÌ°Ô Ä«µåÀÇ ½´Æ®¸¦ ÀúÀåÇÔ  */
+		card_info_13[i][1] = card_num[i] % 13;				/* 1>>> ë‚˜ë¨¸ì§€ >>> ì´ê²Œ ì¹´ë“œì˜ ë°¸ë¥˜ë¥¼ ì €ì¥í•¨ */
+		card_info_13[i][0] = card_num[i] / 13;            /* 0>>> ì •ìˆ˜ ë‚˜ëˆ„ê¸° >>>ì´ê²Œ ì¹´ë“œì˜ ìŠˆíŠ¸ë¥¼ ì €ì¥í•¨  */
 	}
 
-	free(card_num);       /*card_numÀÇ ¸Ş¸ğ¸®¸¦ ÃÊ±âÈ­ÇÔ 13Áø¼ö·Î ¼³Á¤µÈ °ªÀ» È°¿ëÇÔ*/
+	free(card_num);       /*card_numì˜ ë©”ëª¨ë¦¬ë¥¼ ì´ˆê¸°í™”í•¨ 13ì§„ìˆ˜ë¡œ ì„¤ì •ëœ ê°’ì„ í™œìš©í•¨*/
 
 	player_hand_ptr[0] = card_info_13[0];
 	banker_hand_ptr[0] = card_info_13[1];
@@ -750,40 +750,40 @@ void Play()
 	banker_hand_ptr[1] = card_info_13[3];  
 
 	player_hand_ptr[2] = card_info_13[4];
-	banker_hand_ptr[2] = card_info_13[5];																					/*·ê¿¡ ¸Â´Â ¼ø¼­·Î ±âº» ÆĞ¸¦ ³ª´²ÁÜ ¼¼ºÎ·ê ½áµå Ä«µå´Â ¹è´çÇÏ°í Ãß°¡ ¹è¿­ÇÔ*/
+	banker_hand_ptr[2] = card_info_13[5];																					/*ë£°ì— ë§ëŠ” ìˆœì„œë¡œ ê¸°ë³¸ íŒ¨ë¥¼ ë‚˜ëˆ ì¤Œ ì„¸ë¶€ë£° ì¨ë“œ ì¹´ë“œëŠ” ë°°ë‹¹í•˜ê³  ì¶”ê°€ ë°°ì—´í•¨*/
 
 	
-	/*First Split >> ÆĞ¸¦ º¸¿©ÁÜ  */
+	/*First Split >> íŒ¨ë¥¼ ë³´ì—¬ì¤Œ  */
 
-	for (int i = 0; i < 2; i++)           /*First splitÀÇ  player hand¸¦ Ãâ·ÂÇÔ >> ? ¸Å²Ù±â */
+	for (int i = 0; i < 2; i++)           /*First splitì˜  player handë¥¼ ì¶œë ¥í•¨ >> ? ë§¤ê¾¸ê¸° */
 	{
 		Details detail = Card_Detail_Function(player_hand_ptr[i]);
 		
 		gotoxy(13 + 18 * i, 18);
-		printf("%c%c",detail.suit_row, detail.suit_col);       /*suit¸¦ Ãâ·ÂÇÔ*/
+		printf("%c%c",detail.suit_row, detail.suit_col);       /*suitë¥¼ ì¶œë ¥í•¨*/
 		gotoxy(11 + 18 * i, 16);
-		printf("%c", detail.value);         /*value¸¦ Ãâ·ÂÇÔ1 */
+		printf("%c", detail.value);         /*valueë¥¼ ì¶œë ¥í•¨1 */
 		gotoxy(16 + 18 * i, 20);
-		printf("%c",detail.value);           /*value¸¦ Ãâ·ÂÇÔ2 */
+		printf("%c",detail.value);           /*valueë¥¼ ì¶œë ¥í•¨2 */
 		Sleep(1000);
 	}
 
 
-	for (int i = 0; i < 2; i++)           /*First splitÀÇ  banker hand¸¦ Ãâ·ÂÇÔ >> ? ¸Å²Ù±â */
+	for (int i = 0; i < 2; i++)           /*First splitì˜  banker handë¥¼ ì¶œë ¥í•¨ >> ? ë§¤ê¾¸ê¸° */
 	{
 		Details detail = Card_Detail_Function(banker_hand_ptr[i]);
 		
 		gotoxy(67 + 18 * i, 18);
-		printf("%c%c", detail.suit_row, detail.suit_col);       /*suit¸¦ Ãâ·ÂÇÔ*/
+		printf("%c%c", detail.suit_row, detail.suit_col);       /*suitë¥¼ ì¶œë ¥í•¨*/
 		gotoxy(65 + 18 * i, 16);
-		printf("%c",detail.value);         /*value¸¦ Ãâ·ÂÇÔ1 */
+		printf("%c",detail.value);         /*valueë¥¼ ì¶œë ¥í•¨1 */
 		gotoxy(70 + 18 * i, 20);
-		printf("%c", detail.value);           /*value¸¦ Ãâ·ÂÇÔ2 */
+		printf("%c", detail.value);           /*valueë¥¼ ì¶œë ¥í•¨2 */
 		Sleep(1000);
 	}
 
 
-	for (int i = 0; i < 2; i++)             /*±âº» ÆĞÀÇ Á¡¼ö¸¦ ÃøÁ¤ÇÔ >>> case ºĞ·ù·Î ½áµå Ä«µå µô ¿©ºÎ¸¦ È®ÀÎÇÏ´Â °úÁ¤ */
+	for (int i = 0; i < 2; i++)             /*ê¸°ë³¸ íŒ¨ì˜ ì ìˆ˜ë¥¼ ì¸¡ì •í•¨ >>> case ë¶„ë¥˜ë¡œ ì¨ë“œ ì¹´ë“œ ë”œ ì—¬ë¶€ë¥¼ í™•ì¸í•˜ëŠ” ê³¼ì • */
 	{
 		if (player_hand_ptr[i][1] < 9)
 		{
@@ -795,7 +795,7 @@ void Play()
 		{
 			banker_point += banker_hand_ptr[i][1];
 			banker_point += 1;
-		}					/*ÇÃ·¹ÀÌ¾î Æ÷ÀÎÆ®¿Í ¹ğÄ¿ Æ÷ÀÎÆ®ÀÇ ½ÊÀÇ ÀÚ¸®¸¦ ¹ö¸° »óÅÂ·Î ´Ù½Ã ÃÊ±âÈ­ÇÔ */
+		}					/*í”Œë ˆì´ì–´ í¬ì¸íŠ¸ì™€ ë±…ì»¤ í¬ì¸íŠ¸ì˜ ì‹­ì˜ ìë¦¬ë¥¼ ë²„ë¦° ìƒíƒœë¡œ ë‹¤ì‹œ ì´ˆê¸°í™”í•¨ */
 	}	
 
 	player_point = player_point % 10;
@@ -803,7 +803,7 @@ void Play()
 
 	gotoxy(54, 25);
 	SetColor(4);
-	printf("FIRST SPLIT");             /*Ä«µåÀÇ ½´Æ®¿Í ·©Å©¸¦ º¸¿©ÁÖ´Â ÄÚµå°¡ ÇÊ¿äÇÔ */
+	printf("FIRST SPLIT");             /*ì¹´ë“œì˜ ìŠˆíŠ¸ì™€ ë­í¬ë¥¼ ë³´ì—¬ì£¼ëŠ” ì½”ë“œê°€ í•„ìš”í•¨ */
 	SetColor(15);
 	gotoxy(3, 26);
 	printf("player point :%d", player_point);
@@ -813,13 +813,13 @@ void Play()
 
 	Sleep(3000);
 
-	if (player_point >= 8 || banker_point >= 8)  /*³»Ãò·²ÀÏ °æ¿ì */
+	if (player_point >= 8 || banker_point >= 8)  /*ë‚´ì¸„ëŸ´ì¼ ê²½ìš° */
 	{
 		SetColor(6);
 		printf("  NATURAL!!");
 		printf("  result :");
 
-		if (player_point == banker_point)    /*°æ±â °á°ú°¡ tied */
+		if (player_point == banker_point)    /*ê²½ê¸° ê²°ê³¼ê°€ tied */
 		{
 			printf("  tied!!");
 
@@ -831,7 +831,7 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -842,12 +842,12 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);            
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);            
 				SetColor(15);
 
 			}
 		}
-		else if (player_point > banker_point )      /*°æ±â °á°ú°¡ Player Win*/
+		else if (player_point > banker_point )      /*ê²½ê¸° ê²°ê³¼ê°€ Player Win*/
 		{
 			printf("  Player Win!!");
 
@@ -859,7 +859,7 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -870,13 +870,13 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
 
-		else  /*°æ±â °á°ú°¡ banker win*/
+		else  /*ê²½ê¸° ê²°ê³¼ê°€ banker win*/
 		{
 			printf("  Banker Win!!");
 
@@ -888,7 +888,7 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -899,20 +899,20 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
 
 	}
-	else if (player_point >= 6 && banker_point == 7)     /*µÑ´Ù ½ºÅÄµå¿©¼­ ½áµå Ä«µå¸¦ ¹ŞÀ» ÇÊ¿ä°¡ ¾ø´Â »óÈ²*/
+	else if (player_point >= 6 && banker_point == 7)     /*ë‘˜ë‹¤ ìŠ¤íƒ ë“œì—¬ì„œ ì¨ë“œ ì¹´ë“œë¥¼ ë°›ì„ í•„ìš”ê°€ ì—†ëŠ” ìƒí™©*/
 	{
 		SetColor(6);
 		printf("  Both stand!!");
 		printf("  result :");
 
-		if (player_point == banker_point)    /*°æ±â °á°ú°¡ tied */
+		if (player_point == banker_point)    /*ê²½ê¸° ê²°ê³¼ê°€ tied */
 		{
 			printf("  tied!!");
 
@@ -924,7 +924,7 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -935,12 +935,12 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
-		else if (player_point > banker_point)      /*°æ±â °á°ú°¡ Player Win*/
+		else if (player_point > banker_point)      /*ê²½ê¸° ê²°ê³¼ê°€ Player Win*/
 		{
 			printf("  Player Win!!");
 
@@ -952,7 +952,7 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -963,13 +963,13 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
 
-		else  /*°æ±â °á°ú°¡ banker win*/
+		else  /*ê²½ê¸° ê²°ê³¼ê°€ banker win*/
 		{
 			printf("  Banker Win!!");
 
@@ -981,7 +981,7 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -992,13 +992,13 @@ void Play()
 				SetColor(3);
 
 				gotoxy(3, 27);
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
 	}
-	else if (player_point <= 5 && banker_point == 7)                                                        /*½áµå Ä«µå µîÀå »óÈ²1 -player hit & banker stand-*/
+	else if (player_point <= 5 && banker_point == 7)                                                        /*ì¨ë“œ ì¹´ë“œ ë“±ì¥ ìƒí™©1 -player hit & banker stand-*/
 	{
 		SetColor(6);
 		printf("	result: Player hit Third card & Banker Stand");
@@ -1010,11 +1010,11 @@ void Play()
 		SetColor(15);
 
 		gotoxy(13 + 18 * 2, 18);
-		printf("%c%c", detail_3rd.suit_row, detail_3rd.suit_col);       /*suit¸¦ Ãâ·ÂÇÔ*/
+		printf("%c%c", detail_3rd.suit_row, detail_3rd.suit_col);       /*suitë¥¼ ì¶œë ¥í•¨*/
 		gotoxy(11 + 18 * 2, 16);
-		printf("%c", detail_3rd.value);         /*value¸¦ Ãâ·ÂÇÔ1 */
+		printf("%c", detail_3rd.value);         /*valueë¥¼ ì¶œë ¥í•¨1 */
 		gotoxy(16 + 18 * 2, 20);
-		printf("%c", detail_3rd.value);           /*value¸¦ Ãâ·ÂÇÔ2 */
+		printf("%c", detail_3rd.value);           /*valueë¥¼ ì¶œë ¥í•¨2 */
 		
 		if (player_hand_ptr[2][1] < 9)
 		{
@@ -1024,14 +1024,14 @@ void Play()
 
 		gotoxy(54, 27);
 		SetColor(4);
-		printf("SECOND SPLIT");             /*Ä«µåÀÇ ½´Æ®¿Í ·©Å©¸¦ º¸¿©ÁÖ´Â ÄÚµå°¡ ÇÊ¿äÇÔ */
+		printf("SECOND SPLIT");             /*ì¹´ë“œì˜ ìŠˆíŠ¸ì™€ ë­í¬ë¥¼ ë³´ì—¬ì£¼ëŠ” ì½”ë“œê°€ í•„ìš”í•¨ */
 		SetColor(15);
 		gotoxy(3, 28);
 		printf("player point :%d", player_point);
 		gotoxy(20, 28);
 		printf("banker point: %d", banker_point);
 
-		if (player_point == banker_point)    /*°æ±â °á°ú°¡ tied */
+		if (player_point == banker_point)    /*ê²½ê¸° ê²°ê³¼ê°€ tied */
 		{
 			printf("  tied!!");
 
@@ -1043,7 +1043,7 @@ void Play()
 				SetColor(3);
 
 				
-				printf("  YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("  YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1054,12 +1054,12 @@ void Play()
 				SetColor(3);
 
 				
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
-		else if (player_point > banker_point)      /*°æ±â °á°ú°¡ Player Win*/
+		else if (player_point > banker_point)      /*ê²½ê¸° ê²°ê³¼ê°€ Player Win*/
 		{
 			printf("  Player Win!!");
 
@@ -1071,7 +1071,7 @@ void Play()
 				SetColor(3);
 
 				
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1082,13 +1082,13 @@ void Play()
 				SetColor(3);
 
 				
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
 
-		else  /*°æ±â °á°ú°¡ banker win*/
+		else  /*ê²½ê¸° ê²°ê³¼ê°€ banker win*/
 		{
 			printf("  Banker Win!!");
 
@@ -1100,7 +1100,7 @@ void Play()
 				SetColor(3);
 
 				
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1110,7 +1110,7 @@ void Play()
 
 				SetColor(3);
 
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 			}
 		}
@@ -1126,11 +1126,11 @@ void Play()
 		detail_3rd = Card_Detail_Function(banker_hand_ptr[2]);
 
 		gotoxy(13 + 18 * 5, 18);
-		printf("%c%c", detail_3rd.suit_row, detail_3rd.suit_col);       /*suit¸¦ Ãâ·ÂÇÔ*/
+		printf("%c%c", detail_3rd.suit_row, detail_3rd.suit_col);       /*suitë¥¼ ì¶œë ¥í•¨*/
 		gotoxy(11 + 18 * 5, 16);
-		printf("%c", detail_3rd.value);         /*value¸¦ Ãâ·ÂÇÔ1 */
+		printf("%c", detail_3rd.value);         /*valueë¥¼ ì¶œë ¥í•¨1 */
 		gotoxy(16 + 18 * 5, 20);
-		printf("%c", detail_3rd.value);           /*value¸¦ Ãâ·ÂÇÔ2 */
+		printf("%c", detail_3rd.value);           /*valueë¥¼ ì¶œë ¥í•¨2 */
 
 		if (banker_hand_ptr[2][1] < 9)
 		{
@@ -1140,14 +1140,14 @@ void Play()
 
 		gotoxy(54, 27);
 		SetColor(4);
-		printf("SECOND SPLIT");             /*Ä«µåÀÇ ½´Æ®¿Í ·©Å©¸¦ º¸¿©ÁÖ´Â ÄÚµå°¡ ÇÊ¿äÇÔ */
+		printf("SECOND SPLIT");             /*ì¹´ë“œì˜ ìŠˆíŠ¸ì™€ ë­í¬ë¥¼ ë³´ì—¬ì£¼ëŠ” ì½”ë“œê°€ í•„ìš”í•¨ */
 		SetColor(15);
 		gotoxy(3, 28);
 		printf("player point :%d", player_point);
 		gotoxy(20, 28);
 		printf("banker point: %d", banker_point);
 
-		if (player_point == banker_point)    /*°æ±â °á°ú°¡ tied */
+		if (player_point == banker_point)    /*ê²½ê¸° ê²°ê³¼ê°€ tied */
 		{
 			printf("  tied!!");
 
@@ -1159,7 +1159,7 @@ void Play()
 				SetColor(3);
 
 
-				printf("  YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("  YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1170,12 +1170,12 @@ void Play()
 				SetColor(3);
 
 
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
-		else if (player_point > banker_point)      /*°æ±â °á°ú°¡ Player Win*/
+		else if (player_point > banker_point)      /*ê²½ê¸° ê²°ê³¼ê°€ Player Win*/
 		{
 			printf("  Player Win!!");
 
@@ -1187,7 +1187,7 @@ void Play()
 				SetColor(3);
 
 
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1198,13 +1198,13 @@ void Play()
 				SetColor(3);
 
 
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
 
-		else  /*°æ±â °á°ú°¡ banker win*/
+		else  /*ê²½ê¸° ê²°ê³¼ê°€ banker win*/
 		{
 			printf("  Banker Win!!");
 
@@ -1216,7 +1216,7 @@ void Play()
 				SetColor(3);
 
 
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1226,13 +1226,13 @@ void Play()
 
 				SetColor(3);
 
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 			}
 		}
 	}
 	
-	else																			/*ÇÃ·¹ÀÌ¾î ¹ğÄ¿ ¸ğµÎ Èı */                                                   
+	else																			/*í”Œë ˆì´ì–´ ë±…ì»¤ ëª¨ë‘ í› */                                                   
 	{ 
 		SetColor(6);
 		printf("	result: Player & Banker hit Third card ");
@@ -1245,11 +1245,11 @@ void Play()
 
 
 		gotoxy(13 + 18 * 2, 18);
-		printf("%c%c", player_detail_3rd.suit_row, player_detail_3rd.suit_col);       /*suit¸¦ Ãâ·ÂÇÔ*/
+		printf("%c%c", player_detail_3rd.suit_row, player_detail_3rd.suit_col);       /*suitë¥¼ ì¶œë ¥í•¨*/
 		gotoxy(11 + 18 * 2, 16);
-		printf("%c", player_detail_3rd.value);         /*value¸¦ Ãâ·ÂÇÔ1 */
+		printf("%c", player_detail_3rd.value);         /*valueë¥¼ ì¶œë ¥í•¨1 */
 		gotoxy(16 + 18 * 2, 20);
-		printf("%c", player_detail_3rd.value);           /*value¸¦ Ãâ·ÂÇÔ2 */
+		printf("%c", player_detail_3rd.value);           /*valueë¥¼ ì¶œë ¥í•¨2 */
 		Sleep(1000);
 
 		if (player_hand_ptr[2][1] < 9)
@@ -1260,22 +1260,22 @@ void Play()
 
 		gotoxy(54, 27);
 		SetColor(4);
-		printf("SECOND SPLIT");             /*Ä«µåÀÇ ½´Æ®¿Í ·©Å©¸¦ º¸¿©ÁÖ´Â ÄÚµå°¡ ÇÊ¿äÇÔ */
+		printf("SECOND SPLIT");             /*ì¹´ë“œì˜ ìŠˆíŠ¸ì™€ ë­í¬ë¥¼ ë³´ì—¬ì£¼ëŠ” ì½”ë“œê°€ í•„ìš”í•¨ */
 		SetColor(15);
 		gotoxy(3, 28);
 		printf("player point :%d", player_point);
 
-		if (banker_point < 3 || (player_point != 8 && banker_point == 3) || ((player_point == '2' || player_point == 7) && banker_point == 4) || ((player_point == '4' || player_point == 7) && banker_point == 3) || ((player_point == '6' || player_point == 7) && banker_point == 3))  /*Æ¯¼ö ·êÀ» Àû¿ëÇÑ ÄÚµå*/
+		if (banker_point < 3 || (player_point != 8 && banker_point == 3) || ((player_point == '2' || player_point == 7) && banker_point == 4) || ((player_point == '4' || player_point == 7) && banker_point == 3) || ((player_point == '6' || player_point == 7) && banker_point == 3))  /*íŠ¹ìˆ˜ ë£°ì„ ì ìš©í•œ ì½”ë“œ*/
 		{
 			Details banker_detail_3rd;
 			banker_detail_3rd = Card_Detail_Function(banker_hand_ptr[2]);
 
 			gotoxy(13 + 18 * 5, 18);
-			printf("%c%c", banker_detail_3rd.suit_row, banker_detail_3rd.suit_col);       /*suit¸¦ Ãâ·ÂÇÔ*/
+			printf("%c%c", banker_detail_3rd.suit_row, banker_detail_3rd.suit_col);       /*suitë¥¼ ì¶œë ¥í•¨*/
 			gotoxy(11 + 18 * 5, 16);
-			printf("%c", banker_detail_3rd.value);         /*value¸¦ Ãâ·ÂÇÔ1 */
+			printf("%c", banker_detail_3rd.value);         /*valueë¥¼ ì¶œë ¥í•¨1 */
 			gotoxy(16 + 18 * 5, 20);
-			printf("%c", banker_detail_3rd.value);           /*value¸¦ Ãâ·ÂÇÔ2 */
+			printf("%c", banker_detail_3rd.value);           /*valueë¥¼ ì¶œë ¥í•¨2 */
 
 			if (banker_hand_ptr[2][1] < 9)
 			{
@@ -1287,12 +1287,12 @@ void Play()
 			printf("banker point: %d", banker_point);
 
 		}
-		else                                      /*¼¼ºÎ·ê ¿¹¿Ü */
+		else                                      /*ì„¸ë¶€ë£° ì˜ˆì™¸ */
 		{
 			gotoxy(20, 28);
 			printf("banker point: %d", banker_point);
 		}
-		if (player_point == banker_point)    /*°æ±â °á°ú°¡ tied */
+		if (player_point == banker_point)    /*ê²½ê¸° ê²°ê³¼ê°€ tied */
 		{
 			printf("  tied!!");
 
@@ -1304,7 +1304,7 @@ void Play()
 				SetColor(3);
 
 
-				printf("  YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("  YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1315,12 +1315,12 @@ void Play()
 				SetColor(3);
 
 
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
-		else if (player_point > banker_point)      /*°æ±â °á°ú°¡ Player Win*/
+		else if (player_point > banker_point)      /*ê²½ê¸° ê²°ê³¼ê°€ Player Win*/
 		{
 			printf("  Player Win!!");
 
@@ -1332,7 +1332,7 @@ void Play()
 				SetColor(3);
 
 
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1343,13 +1343,13 @@ void Play()
 				SetColor(3);
 
 
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 
 			}
 		}
 
-		else  /*°æ±â °á°ú°¡ banker win*/
+		else  /*ê²½ê¸° ê²°ê³¼ê°€ banker win*/
 		{
 			printf("  Banker Win!!");
 
@@ -1361,7 +1361,7 @@ void Play()
 				SetColor(3);
 
 
-				printf("YOU WIN!!   ÇöÀç Ä¨°³¼ö : %d", chip);              /*À¯ÀúÀÇ ¹èÆÃÀ» ÆÄ¾ÇÇÏ°í ¹è´ç±İÀ» µ¹·ÁÁÖ´Â ÄÚµå*/
+				printf("YOU WIN!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);              /*ìœ ì €ì˜ ë°°íŒ…ì„ íŒŒì•…í•˜ê³  ë°°ë‹¹ê¸ˆì„ ëŒë ¤ì£¼ëŠ” ì½”ë“œ*/
 				SetColor(15);
 
 			}
@@ -1371,36 +1371,36 @@ void Play()
 
 				SetColor(3);
 
-				printf("YOU LOSE!!   ÇöÀç Ä¨°³¼ö : %d", chip);
+				printf("YOU LOSE!!   í˜„ì¬ ì¹©ê°œìˆ˜ : %d", chip);
 				SetColor(15);
 			}
 		}
 	}
 
-	free(card_info_13); /*µ¿Àû ÇÒ´çÀ» Ç®¾îÁÜ >> ´ÙÀ½ °ÔÀÓÀ» ÁØºñÇÔ orÇÁ·Î±×·¥À» Á¾·á*/
+	free(card_info_13); /*ë™ì  í• ë‹¹ì„ í’€ì–´ì¤Œ >> ë‹¤ìŒ ê²Œì„ì„ ì¤€ë¹„í•¨ orí”„ë¡œê·¸ë¨ì„ ì¢…ë£Œ*/
 
 	Sleep(10000);
 	Clear();
 
-	if (chip == 0) /*¸ğµç Ä¨À» ÀÒÀ½ >> ÇÁ·Î±×·¥À» Á¾·áÇÔ */
+	if (chip == 0) /*ëª¨ë“  ì¹©ì„ ìƒìŒ >> í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•¨ */
 	{
 		system("cls");
 		gotoxy(0, 0);
-		printf("ÆÄ»ê Çß½À´Ï´Ù !!\n");
+		printf("íŒŒì‚° í–ˆìŠµë‹ˆë‹¤ !!\n");
 		system("pause");
 	}
-	else if (chip >= 100000) /*¸ñÇ¥Ä¡ º¸´Ù Å« Ä¨À» È¹µæÇÔ >> ÇÁ·Î±×·¥À» Á¾·áÇÔ */
+	else if (chip >= 100000) /*ëª©í‘œì¹˜ ë³´ë‹¤ í° ì¹©ì„ íšë“í•¨ >> í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•¨ */
 	{
 		Draw_Congratulation();
 
 		gotoxy(40, 20);
-		printf("ÃÑ %d°³ÀÇ Ä¨À» ¾ò¾ú½À´Ï´Ù!!",chip);
+		printf("ì´ %dê°œì˜ ì¹©ì„ ì–»ì—ˆìŠµë‹ˆë‹¤!!",chip);
 		gotoxy(45, 25);
 		system("pause");
 		system("cls");
 
 	}
-	else  /*¹ÙÄ«¶ó¸¦ Á¾·áÇÏ°í ¸Ş´º·Î µ¹¾Æ°¨  */
+	else  /*ë°”ì¹´ë¼ë¥¼ ì¢…ë£Œí•˜ê³  ë©”ë‰´ë¡œ ëŒì•„ê°  */
 	{
 		Draw_Bakara();
 		Menu();
