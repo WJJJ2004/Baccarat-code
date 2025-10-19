@@ -1,11 +1,11 @@
 # Baccarat Game (C Project)
 
 ## 📁 Table of Contents
-- 1. [Key Features](#key-features)
-- 2. [Technical Highlights](#technical-highlights)
-- 3. [How to Build and Run](#how-to-build-and-run)
-- 4. [Project Purpose](#project-purpose)
-- 5. [Project presentation](#Project-Presentation)
+1. [Key Features](#key-features)
+2. [Technical Highlights](#technical-highlights)
+3. [How to Build and Run](#how-to-build-and-run)
+4. [Project Purpose](#project-purpose)
+5. [Project presentation](#Project-Presentation)
 
 This is a console-based Baccarat game implemented in C. The project focuses on simulating the basic rules of Baccarat, including card dealing, score calculation, and third-card rules. It also includes a simple text-based interface using console functions such as gotoxy, getch, and SetColor.
 
