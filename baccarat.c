@@ -604,7 +604,7 @@ void Play()
 	int banker_point = 0, player_point = 0;
 	int duplicate;									 /*중복 여부를 표현하는 변수이다*/
 
-	int* card_num = malloc(sizeof(int) * 6);
+	int* card_num = (int*)malloc(sizeof(int) * 6);
 	int* player_hand_ptr[3];						/*포인터 배열임을 유의할 것*/
 	int* banker_hand_ptr[3];
 
