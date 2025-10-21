@@ -19,6 +19,12 @@ This is a console-based Baccarat game implemented in C. The project focuses on s
 
 - Console interface with keyboard navigation and visual effects
 
+
+
+
+https://github.com/user-attachments/assets/e499a862-5f61-46cf-a697-ce595cae7df3
+
+
 ## Technical Highlights
 
 - Dynamic memory allocation with malloc
